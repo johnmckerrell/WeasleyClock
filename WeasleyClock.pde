@@ -35,7 +35,7 @@ byte ip[] = { 10, 56, 56, 20 };
 #define DEBUG 1
 
 ClockDriver cd;
-MapMe_At mm_john, mm_geraldine;
+MapMe_At mm_john, mm_other;
 int forwardsPush = 6;
 int backwardsPush = 7;
 int thirdOption = 8;
@@ -53,8 +53,8 @@ void setup()                    // run once, when the sketch starts
   Serial.begin(9600);
 #endif
   cd.setup();
-  mm_john.setup("john");
-  mm_geraldine.setup("mcknut-oldphone");
+  mm_john.setup("user1");
+  mm_other.setup("user2");
   pinMode(forwardsPush, INPUT);
   pinMode(backwardsPush, INPUT);
   pinMode(thirdOption, INPUT);
@@ -87,7 +87,7 @@ void loop()                     // run over and over again
   //return;
   cd.loop();
   mm_john.loop();
-  mm_geraldine.loop();
+  mm_other.loop();
   unsigned long nowMillis = millis();
   boolean update = false;
   if( lastMillis != 0 ) {
@@ -112,8 +112,8 @@ void loop()                     // run over and over again
     if( ! mm_john.isActive() ) {
       mm_john.requestLocation();
     }
-    if( ! mm_geraldine.isActive() ) {
-      mm_geraldine.requestLocation();
+    if( ! mm_other.isActive() ) {
+      mm_other.requestLocation();
     }
     lastMillis = nowMillis;
   }
@@ -128,12 +128,12 @@ void loop()                     // run over and over again
         johnHand = locationToHour( mm_john.getLocation() );
       }
     }
-    if( geraldineHand == -1 && ! mm_geraldine.isActive() ) {
-      if( mm_geraldine.wasError() ) {
+    if( geraldineHand == -1 && ! mm_other.isActive() ) {
+      if( mm_other.wasError() ) {
         geraldineHand = lastGHand;
         wasError = true;
       } else {
-        geraldineHand = locationToHour( mm_geraldine.getLocation() );
+        geraldineHand = locationToHour( mm_other.getLocation() );
       }
     }
     if( geraldineHand != -1 && johnHand != -1 ) {
@@ -145,7 +145,7 @@ void loop()                     // run over and over again
       Serial.print( " (" );
       Serial.print( johnHand );
       Serial.print( ") and " );
-      Serial.print( mm_geraldine.getLocation() );
+      Serial.print( mm_other.getLocation() );
       Serial.print( " (" );
       Serial.print( geraldineHand );
       Serial.println( ")" );

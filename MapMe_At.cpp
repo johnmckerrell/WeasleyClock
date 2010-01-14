@@ -61,7 +61,7 @@ void MapMe_At::loop() {
 
 void MapMe_At::requestLocation() {
   byte server[] = { 
-    78, 47, 35, 219   }; // mapme.at
+    188, 40, 54, 143 }; // mapme.at
   client = new Client(server,80);
 #ifdef DEBUG
   Serial.println("connecting...");
