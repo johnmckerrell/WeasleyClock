@@ -53,8 +53,8 @@ void setup()                    // run once, when the sketch starts
   Serial.begin(9600);
 #endif
   cd.setup();
-  mm_john.setup("user1");
-  mm_other.setup("user2");
+  mm_john.setup("royaldaffodil");
+  mm_other.setup("snowdrop");
   pinMode(forwardsPush, INPUT);
   pinMode(backwardsPush, INPUT);
   pinMode(thirdOption, INPUT);
@@ -62,23 +62,26 @@ void setup()                    // run once, when the sketch starts
 }
 
 int locationToHour( char *location ) {
-  if( location[0] != '\0' && strcasestr( location, "home" ) != NULL ) {
-    return 1;
+  if( location[0] != '\0' && strcasestr( location, "liverpool" ) != NULL ) {
+    return 11;
   }
-  if( location[0] != '\0' && strcasestr( location, "work" ) != NULL ) {
-    return 4;
+  if( location[0] != '\0' && strcasestr( location, "seacombe" ) != NULL ) {
+    return 3;
   }
-  if( location[0] != '\0' && strcasestr( location, "shops" ) != NULL ) {
+  if( location[0] != '\0' && strcasestr( location, "west-float" ) != NULL ) {
+    return 5;
+  }
+  if( location[0] != '\0' && strcasestr( location, "east-float" ) != NULL ) {
+    return 5;
+  }
+  if( location[0] != '\0' && strcasestr( location, "woodchurch" ) != NULL ) {
     return 7;
   }
-  if( location[0] != '\0' && strcasestr( location, "cafe" ) != NULL ) {
-    return 7;
-  }
-  if( location[0] != '\0' && strcasestr( location, "pub" ) != NULL ) {
-    return 7;
+  if( location[0] != '\0' && strcasestr( location, "manchester-ship-canal" ) != NULL ) {
+    return 9;
   }
 
-  return 10;
+  return 1;
 }
 
 void loop()                     // run over and over again

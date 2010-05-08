@@ -31,7 +31,7 @@ void MapMe_At::loop() {
         if( strcmp("error", key) == 0 ) {
           error = MAPME_AT_ERR_RESULT;
         } 
-        else if( strcmp("tags", key) == 0 ) {
+        else if( strcmp("label", key) == 0 ) {
           strcpy( location, jsonParser.getVal() );
         }
         /*
