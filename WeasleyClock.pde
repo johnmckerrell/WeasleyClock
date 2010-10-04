@@ -1,3 +1,4 @@
+#include <SPI.h>
 #include <stdlib.h>
 #include <EEPROM.h>
 #include <Client.h>
@@ -29,8 +30,9 @@ void operator delete(void * ptr)
  */
 
 byte mac[] = { 0xDE, 0xAD, 0xB3, 0xED, 0xCE, 0xEA };
-byte ip[] = { 10, 56, 56, 20 };
-//byte ip[] = { 192, 168, 2, 2 };
+//byte ip[] = { 10, 56, 56, 20 };
+byte ip[] = { 192, 168, 10, 17 };
+//byte ip[] = { 192, 168, 10, 17 };
 
 #define DEBUG 1
 
@@ -53,8 +55,8 @@ void setup()                    // run once, when the sketch starts
   Serial.begin(9600);
 #endif
   cd.setup();
-  mm_john.setup("royaldaffodil");
-  mm_other.setup("snowdrop");
+  mm_john.setup("snowdrop");
+  mm_other.setup("royaliris");
   pinMode(forwardsPush, INPUT);
   pinMode(backwardsPush, INPUT);
   pinMode(thirdOption, INPUT);
@@ -74,6 +76,9 @@ int locationToHour( char *location ) {
   if( location[0] != '\0' && strcasestr( location, "east-float" ) != NULL ) {
     return 5;
   }
+  if( location[0] != '\0' && strcasestr( location, "alexandra-dock" ) != NULL ) {
+    return 5;
+  }
   if( location[0] != '\0' && strcasestr( location, "woodchurch" ) != NULL ) {
     return 7;
   }
@@ -86,7 +91,9 @@ int locationToHour( char *location ) {
 
 void loop()                     // run over and over again
 {
-  //cd.step(1);
+  //if(digitalRead(forwardsPush) == HIGH) {
+  //  cd.step(1);
+  //}
   //return;
   cd.loop();
   mm_john.loop();
