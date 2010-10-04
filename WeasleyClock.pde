@@ -92,9 +92,12 @@ int locationToHour( char *location ) {
 void loop()                     // run over and over again
 {
   //if(digitalRead(forwardsPush) == HIGH) {
+  //for(int i = 0; i < 150; ++i ) {
   //  cd.step(1);
   //}
-  //return;
+  //delay(2000);
+  //}
+  return;
   cd.loop();
   mm_john.loop();
   mm_other.loop();
