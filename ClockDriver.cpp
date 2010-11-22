@@ -2,65 +2,8 @@
 #include "WProgram.h"
 #include "ClockDriver.h"
 
-void ClockDriver::step(boolean dir) {
-  if( dir ) {
-    _step1();
-    delay(pause);
-    _step2();
-    delay(pause);
-    _step3();
-    delay(pause);
-    _step4();
-    delay(pause);
-    ++currentSteps;
-  } else {
-    _step4();
-    delay(pause);
-    _step3();
-    delay(pause);
-    _step2();
-    delay(pause);
-    _step1();
-    delay(pause);
-    --currentSteps;
-  }
-  if( currentSteps < 0 ) {
-    currentSteps += maxSteps;
-  } else if( currentSteps >= maxSteps ) {
-    currentSteps -= maxSteps;
-  }
-}
-
-void ClockDriver::_step1() {
- digitalWrite(step1A, LOW);
- digitalWrite(step2A, LOW);
- digitalWrite(step3A, LOW);
- digitalWrite(step4A, HIGH);
-}
-    
-void ClockDriver::_step2() {
- digitalWrite(step1A, LOW);
- digitalWrite(step2A, HIGH);
- digitalWrite(step3A, LOW);
- digitalWrite(step4A, LOW);
-}
-    
-void ClockDriver::_step3() {
- digitalWrite(step1A, LOW);
- digitalWrite(step2A, LOW);
- digitalWrite(step3A, HIGH);
- digitalWrite(step4A, LOW);
-}
-    
-void ClockDriver::_step4() {
- digitalWrite(step1A, HIGH);
- digitalWrite(step2A, LOW);
- digitalWrite(step3A, LOW);
- digitalWrite(step4A, LOW);
-}
-
 void ClockDriver::setup() {
-  this->setup(2,3,4,5,1);
+  this->setup(4,5,6,7,30);
 }
 
 void ClockDriver::_readSteps() {
@@ -115,70 +58,44 @@ void ClockDriver::stepTo(int step, boolean allowBackwards) {
       direction = false;
     }
   }
-#ifdef DEBUG
-  Serial.print( "going from " );
-  Serial.print( currentSteps );
-  Serial.print( " to " );
-  Serial.print( step );
-  Serial.println( direction ? " forwards" : " backwards" );
-#endif
+
+/*
   while( currentSteps != step ) {
     this->step(direction);
   }
+  */
+  Serial.print("step = ");
+  Serial.println(step);
+  Serial.print("currentSteps = ");
+  Serial.println(currentSteps);
+  int steps = step - currentSteps;
+  Serial.print("steps = ");
+  Serial.println(steps);
+  if( steps < 0 )
+    steps += (600*12);
+  steps = - steps;
+  Serial.print("steps = ");
+  Serial.println(steps);
+  Serial.print("stepper = ");
+  Serial.println((int)(this->stepper));
+  while( steps < -100 ) {
+    stepper->step(-100);
+    steps += 100;
+  }
+  stepper->step(steps);
+  currentSteps = step;
   this->writeSteps();
 }
 
 void ClockDriver::setClockHands( int bigHand, int smallHand ) {
   if( bigHand < 0 || bigHand >= 12 || smallHand < 0 || smallHand >= 12 )
     return;
-  int newStep = 150 * smallHand + ( bigHand * ( 150 / 12 ) );
+  int newStep = 600 * smallHand + ( bigHand * ( 600 / 12 ) );
   stepTo( newStep, false );
 }
 
 boolean ClockDriver::isActive() {
   return active;
-}
-
-void ClockDriver::setTarget(int target, boolean allowBackwards) {
-  if( target < 0 || target >= maxSteps ) {
-    targetStep = -1;
-    active = false;
-    this->writeSteps();
-  }
-  int direction = true;
-  if( allowBackwards ) {
-    int backwards = ( currentSteps - target ) % maxSteps;
-    int forwards = ( target - currentSteps ) % maxSteps;
-    if( backwards < 0 )
-      backwards += maxSteps;
-    if( forwards < 0 )
-      forwards += maxSteps;
-    if( backwards < forwards ) {
-      direction = false;
-    }
-  }
-  if( target != currentSteps ) {
-    active = true;
-  }
-  targetStep = target;
-  targetDirection = direction;
-#ifdef DEBUG
-  Serial.print( "going from " );
-  Serial.print( currentSteps );
-  Serial.print( " to " );
-  Serial.print( target );
-  Serial.println( direction ? " forwards" : " backwards" );
-#endif
-}
-
-void ClockDriver::loop() {
-  if( targetStep < 0 || targetStep >= maxSteps ) {
-  } else if( currentSteps != targetStep ) {
-    this->step(targetDirection);
-  } else if( active ) {
-    this->writeSteps();
-    active = false;
-  }
 }
 
 int ClockDriver::getCurrentStep() {
@@ -187,19 +104,12 @@ int ClockDriver::getCurrentStep() {
 
 
 void ClockDriver::setup(int a, int b, int c, int d, int e) {
-  step1A = a;                // LED connected to digital pin 13
-  step2A = b;
-  step3A = c;
-  step4A = d;
-  pause = e;
-  maxSteps = 150*12;
+  stepper = new Stepper(600,a,b,c,d);
+  stepper->setSpeed(e);
+  maxSteps = 600*12;
   currentSteps = 0;
   this->_readSteps();
   targetStep = -1;
   targetDirection = true;
   active = false;
-  pinMode(step1A, OUTPUT);      // sets the digital pin as output
-  pinMode(step2A, OUTPUT);
-  pinMode(step3A, OUTPUT);
-  pinMode(step4A, OUTPUT);
 }

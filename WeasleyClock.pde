@@ -4,6 +4,7 @@
 #include <Client.h>
 #include <Ethernet.h>
 #include <Server.h>
+#include <Stepper.h>
 
 #include "ClockDriver.h"
 #include "MapMe_At.h"
@@ -31,8 +32,8 @@ void operator delete(void * ptr)
 
 byte mac[] = { 0xDE, 0xAD, 0xB3, 0xED, 0xCE, 0xEA };
 //byte ip[] = { 10, 56, 56, 20 };
-byte ip[] = { 192, 168, 10, 17 };
-//byte ip[] = { 192, 168, 10, 17 };
+byte ip[] = { 192, 168, 2, 2 };
+//byte ip[] = { 192, 168, 10, 97 };
 
 #define DEBUG 1
 
@@ -57,10 +58,10 @@ void setup()                    // run once, when the sketch starts
   cd.setup();
   mm_john.setup("snowdrop");
   mm_other.setup("royaliris");
-  pinMode(forwardsPush, INPUT);
-  pinMode(backwardsPush, INPUT);
-  pinMode(thirdOption, INPUT);
-  pinMode(ledPin, OUTPUT);
+  //pinMode(forwardsPush, INPUT);
+  //pinMode(backwardsPush, INPUT);
+  //pinMode(thirdOption, INPUT);
+  //pinMode(ledPin, OUTPUT);
 }
 
 int locationToHour( char *location ) {
@@ -91,6 +92,17 @@ int locationToHour( char *location ) {
 
 void loop()                     // run over and over again
 {
+  /*
+  Serial.println("Hands to 4 & 7");
+  cd.setClockHands(4,7);
+  delay(1000);
+  Serial.println("Hands to 8 & 2");
+  cd.setClockHands(8,2);
+  delay(1000);
+  Serial.println("Hands to 1 & 5");
+  cd.setClockHands(1,5);
+  delay(1000);
+  return;
   //if(digitalRead(forwardsPush) == HIGH) {
   //for(int i = 0; i < 150; ++i ) {
   //  cd.step(1);
@@ -98,7 +110,7 @@ void loop()                     // run over and over again
   //delay(2000);
   //}
   //return;
-  cd.loop();
+  */
   mm_john.loop();
   mm_other.loop();
   unsigned long nowMillis = millis();
