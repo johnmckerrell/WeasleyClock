@@ -16,6 +16,7 @@ class ClockDriver {
     boolean isActive();
 
   private:
+    int pin1, pin2, pin3, pin4;
     int pause;
     int maxSteps;
     int currentSteps;

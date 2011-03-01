@@ -83,6 +83,10 @@ void ClockDriver::stepTo(int step, boolean allowBackwards) {
     steps += 100;
   }
   stepper->step(steps);
+  digitalWrite(pin1,LOW);
+  digitalWrite(pin2,LOW);
+  digitalWrite(pin3,LOW);
+  digitalWrite(pin4,LOW);
   currentSteps = step;
   this->writeSteps();
 }
@@ -104,6 +108,7 @@ int ClockDriver::getCurrentStep() {
 
 
 void ClockDriver::setup(int a, int b, int c, int d, int e) {
+  pin1 = a; pin2 = b; pin3 = c; pin4 = d;
   stepper = new Stepper(600,a,b,c,d);
   stepper->setSpeed(e);
   maxSteps = 600*12;
