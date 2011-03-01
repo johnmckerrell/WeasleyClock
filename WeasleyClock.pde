@@ -32,7 +32,7 @@ void operator delete(void * ptr)
 
 byte mac[] = { 0xDE, 0xAD, 0xB3, 0xED, 0xCE, 0xEA };
 //byte ip[] = { 10, 56, 56, 20 };
-byte ip[] = { 192, 168, 2, 2 };
+byte ip[] = { 192, 168, 0, 201 };
 //byte ip[] = { 192, 168, 10, 97 };
 
 #define DEBUG 1
@@ -103,6 +103,7 @@ void loop()                     // run over and over again
   cd.setClockHands(1,5);
   delay(1000);
   return;
+  */
   //if(digitalRead(forwardsPush) == HIGH) {
   //for(int i = 0; i < 150; ++i ) {
   //  cd.step(1);
@@ -110,7 +111,6 @@ void loop()                     // run over and over again
   //delay(2000);
   //}
   //return;
-  */
   mm_john.loop();
   mm_other.loop();
   unsigned long nowMillis = millis();
