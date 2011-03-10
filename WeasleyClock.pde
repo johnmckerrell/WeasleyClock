@@ -32,7 +32,7 @@ void operator delete(void * ptr)
 
 byte mac[] = { 0xDE, 0xAD, 0xB3, 0xED, 0xCE, 0xEA };
 //byte ip[] = { 10, 56, 56, 20 };
-byte ip[] = { 192, 168, 2, 2 };
+//byte ip[] = { 192, 168, 2, 2 };
 //byte ip[] = { 192, 168, 10, 97 };
 
 #define DEBUG 1
@@ -43,6 +43,7 @@ int forwardsPush = 6;
 int backwardsPush = 7;
 int thirdOption = 8;
 int ledPin = 13;
+// geraldineHand is the hour hand, johnHand is the minute hand
 int geraldineHand = 0, johnHand = 0;
 int lastGHand = 0, lastJHand = 0;
 unsigned long lastMillis = 0;
@@ -51,10 +52,17 @@ boolean outputted = false;
 
 void setup()                    // run once, when the sketch starts
 {
-  Ethernet.begin(mac, ip);
 #ifdef DEBUG
   Serial.begin(9600);
 #endif
+  if (Ethernet.begin(mac) == 0) {
+#ifdef DEBUG
+    Serial.println("Failed to configure Ethernet using DHCP");
+#endif
+    // no point in carrying on, so do nothing forevermore:
+    for(;;)
+      ;
+  }
   cd.setup();
   mm_john.setup("snowdrop");
   mm_other.setup("royaliris");
@@ -169,11 +177,11 @@ void loop()                     // run over and over again
       Serial.print( mm_john.getLocation() );
       Serial.print( " (" );
       Serial.print( johnHand );
-      Serial.print( ") and " );
+      Serial.print( " minutes) and " );
       Serial.print( mm_other.getLocation() );
       Serial.print( " (" );
       Serial.print( geraldineHand );
-      Serial.println( ")" );
+      Serial.println( " hours)" );
 #endif
       cd.setClockHands( johnHand, geraldineHand );
     }

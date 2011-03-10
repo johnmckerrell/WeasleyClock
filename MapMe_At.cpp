@@ -62,11 +62,11 @@ void MapMe_At::loop() {
 void MapMe_At::requestLocation() {
   byte server[] = { 
     188, 40, 54, 143 }; // mapme.at
-  client = new Client(server,80);
+  client = new Client;
 #ifdef DEBUG
   Serial.println("connecting...");
 #endif
-  if( client->connect() ) {
+  if( client->connect("mapme.at", 80) ) {
     jsonParser.clearState();
     location[0] = '\0';
 
