@@ -83,6 +83,12 @@ void ClockDriver::stepTo(int step, boolean allowBackwards) {
     steps += 100;
   }
   stepper->step(steps);
+  // Now turn off the output to the H-bridge to help reduce power consumption and 
+  // stop the H-bridge from getting too hot
+  digitalWrite(4, LOW);
+  digitalWrite(5, LOW);
+  digitalWrite(6, LOW);
+  digitalWrite(7, LOW);
   currentSteps = step;
   this->writeSteps();
 }
