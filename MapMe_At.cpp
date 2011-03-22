@@ -59,14 +59,17 @@ void MapMe_At::loop() {
   }
 }
 
+// Crude cachebusting to get round the Maker Faire proxy
+int gRequestCount = 0;
+
 void MapMe_At::requestLocation() {
   byte server[] = { 
     188, 40, 54, 143 }; // mapme.at
-  client = new Client(server,80);
+  client = new Client;
 #ifdef DEBUG
   Serial.println("connecting...");
 #endif
-  if( client->connect() ) {
+  if( client->connect("mapme.at", 80) ) {
     jsonParser.clearState();
     location[0] = '\0';
 
@@ -75,6 +78,11 @@ void MapMe_At::requestLocation() {
 #endif
     client->print("GET /api/where.json?username=");
     client->print(username);
+    // Crude cachebusting to get round makerfaire proxy
+    client->print("&mfuk=");
+    client->print(gRequestCount++);
+    client->println(" HTTP/1.0");
+    client->print("Host: mapme.at");
     client->println();
     client->println();
   } 
