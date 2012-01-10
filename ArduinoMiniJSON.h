@@ -1,7 +1,7 @@
 #ifndef ARDUINOMINIJSON_H
 #define ARDUINOMINIJSON_H
 
-#include "WProgram.h"
+#include "Arduino.h"
 
 /**
  * The JSON parser can be in one of the following states:
@@ -16,20 +16,22 @@
  * if a key has a non-string value we ignore it
  */
 #define JSON_MAX_STRING 40
-#define JSON_PARSE_FINDJSON 0
-#define JSON_PARSE_HAVEJSON 1
-#define JSON_PARSE_INKEY 2
-#define JSON_PARSE_HAVEKEY 3
-#define JSON_PARSE_INVAL 4
-#define JSON_PARSE_HAVEVAL 5
-#define JSON_PARSE_KEYTOOLONG 6
-#define JSON_PARSE_VALTOOLONG 7
+#define JSON_PARSE_CHECK_HTTP 0
+#define JSON_PARSE_FINDJSON 1
+#define JSON_PARSE_HAVEJSON 2
+#define JSON_PARSE_INKEY 3
+#define JSON_PARSE_HAVEKEY 4
+#define JSON_PARSE_INVAL 5
+#define JSON_PARSE_HAVEVAL 6
+#define JSON_PARSE_KEYTOOLONG 7
+#define JSON_PARSE_VALTOOLONG 8
 
 class ArduinoMiniJSON {
   public:
     void setup();
     void clearState();
     void handleInput(char c);
+    int getHTTPStatus();
     char* getKey();
     char* getVal();
     int getParseState();
@@ -39,6 +41,8 @@ class ArduinoMiniJSON {
     char jsonVal[JSON_MAX_STRING];
     int jsonKeyPos;
     int jsonValPos;
+    int httpStatus;
+    int httpSkip;
     int parseState;
     boolean escapeNextChar;
     

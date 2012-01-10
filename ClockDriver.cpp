@@ -1,6 +1,8 @@
 #include <EEPROM.h>
-#include "WProgram.h"
+#include "Arduino.h"
 #include "ClockDriver.h"
+
+#define NUM_STEPS 843
 
 void ClockDriver::setup() {
   this->setup(4,5,6,7,30);
@@ -72,7 +74,7 @@ void ClockDriver::stepTo(int step, boolean allowBackwards) {
   Serial.print("steps = ");
   Serial.println(steps);
   if( steps < 0 )
-    steps += (600*12);
+    steps += (NUM_STEPS*12);
   steps = - steps;
   Serial.print("steps = ");
   Serial.println(steps);
@@ -96,7 +98,7 @@ void ClockDriver::stepTo(int step, boolean allowBackwards) {
 void ClockDriver::setClockHands( int bigHand, int smallHand ) {
   if( bigHand < 0 || bigHand >= 12 || smallHand < 0 || smallHand >= 12 )
     return;
-  int newStep = 600 * smallHand + ( bigHand * ( 600 / 12 ) );
+  int newStep = NUM_STEPS * smallHand + ( bigHand * ( NUM_STEPS / 12 ) );
   stepTo( newStep, false );
 }
 
@@ -111,9 +113,9 @@ int ClockDriver::getCurrentStep() {
 
 void ClockDriver::setup(int a, int b, int c, int d, int e) {
   pin1 = a; pin2 = b; pin3 = c; pin4 = d;
-  stepper = new Stepper(600,a,b,c,d);
+  stepper = new Stepper(NUM_STEPS,a,b,c,d);
   stepper->setSpeed(e);
-  maxSteps = 600*12;
+  maxSteps = NUM_STEPS*12;
   currentSteps = 0;
   this->_readSteps();
   targetStep = -1;

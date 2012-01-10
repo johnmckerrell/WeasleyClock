@@ -2,7 +2,7 @@
 #define ClockDriver_h
 
 #include <Stepper.h>
-#include "WProgram.h"
+#include "Arduino.h"
 
 class ClockDriver {
   public:  

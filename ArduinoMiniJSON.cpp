@@ -17,6 +17,8 @@ void ArduinoMiniJSON::clearState() {
   // Only need to set the state, we
   // clear all other vars before use.
   parseState = 0;
+  httpStatus = 0;
+  httpSkip = 0;
 }
 
 /**
@@ -33,6 +35,10 @@ char* ArduinoMiniJSON::getKey() {
 
 char* ArduinoMiniJSON::getVal() {
   return jsonVal;
+}
+
+int ArduinoMiniJSON::getHTTPStatus() {
+  return httpStatus;
 }
 
 /**
@@ -70,7 +76,16 @@ void ArduinoMiniJSON::handleInput(char c) {
     // We had a valid key/pair, now we start again.
     parseState = JSON_PARSE_HAVEJSON;
   }
-  if( parseState == JSON_PARSE_FINDJSON ) {
+  if( parseState == JSON_PARSE_CHECK_HTTP ) {
+    if( httpSkip < 9 ) {
+      // Skip HTTP/1.1<space>
+      ++httpSkip;
+    } else if( c >= '0' && c <= '9' ) {
+      httpStatus = (httpStatus * 10) + (c - '0');
+    } else {
+      parseState = JSON_PARSE_FINDJSON;
+    }
+  } else if( parseState == JSON_PARSE_FINDJSON ) {
     if( c == '{' )
       parseState = JSON_PARSE_HAVEJSON;
   } else if( parseState == JSON_PARSE_HAVEJSON ) {
